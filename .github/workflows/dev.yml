@@ -57,6 +57,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: "${IMAGE}:${{ steps.get_version.outputs.version }}"
+          tags: "${{ env.IMAGE }}:${{ steps.get_version.outputs.version }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
