@@ -11,7 +11,7 @@ permissions:
 
 env:
   APP_NAME: "dp-001-app"
-  IMAGE: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_NAME }}
+  IMAGE: ${{ secrets.ECR_REGISTRY }}/dp-001-app
   GITOPS_REPO: "LeandroVidal555/devops_practice_001_kubernetes"
 
 jobs:
@@ -66,7 +66,7 @@ jobs:
       - name: Checkout GitOps repo
         uses: actions/checkout@v4
         with:
-          repository: ${{ GITOPS_REPO }}
+          repository: ${{ env.GITOPS_REPO }}
           ref: main
           token: ${{ secrets.K8S_GA_PAT }}
           path: gitops

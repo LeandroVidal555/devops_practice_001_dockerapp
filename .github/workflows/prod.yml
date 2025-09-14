@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Guard: merged PR from dev only
+      - name: Merged PR from dev only
         id: guard
         run: |
           if [ "${{ github.event.pull_request.merged }}" != "true" ]; then
