@@ -81,7 +81,7 @@ jobs:
           cat $FILE
 
           # Replace only the image line
-          perl -0777 -pe 's|(^\s*image:\s*).*$|\1'"$NEW_IMAGE"'|m' -i "$FILE"
+          sed -i 's/image:/image: ${NEW_IMAGE}/' $FILE
 
           echo "Whole file AFTER PERL"
           cat $FILE
