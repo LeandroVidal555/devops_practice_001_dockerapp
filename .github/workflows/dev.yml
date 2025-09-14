@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  IMAGE: ${{ secrets.ECR_REGISTRY }}/dev-dp-001-app
+  IMAGE: ${{ secrets.ECR_REGISTRY }}/dp-001-app
 
 jobs:
   build-and-push:
