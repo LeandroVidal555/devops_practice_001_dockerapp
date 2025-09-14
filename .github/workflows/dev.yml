@@ -77,27 +77,21 @@ jobs:
           NEW_IMAGE="${{ env.IMAGE }}:${{ steps.get_version.outputs.version }}"
           FILE="dev/services/hello-world-lmv/deployment.yml"
 
-          echo "Whole file BEFORE PERL"
-          cat $FILE
-
           # Replace only the image line
           sed -i "s|image:.*|image:\ ${NEW_IMAGE}|g" $FILE
-
-          echo "Whole file AFTER PERL"
-          cat $FILE
 
           echo "Replaced image line:"
           grep -n 'image:' "$FILE"
 
 
 
-      #- name: Create PR in GitOps repo
-      #  uses: peter-evans/create-pull-request@v6
-      #  with:
-      #    token: ${{ secrets.K8S_GA_PAT }}
-      #    path: gitops
-      #    commit-message: "dev: ${{ env.APP_NAME }} → ${{ steps.get_version.outputs.version }}"
-      #    branch: "newversion-${{ env.APP_NAME }}-${{ steps.get_version.outputs.version }}"
-      #    base: main
-      #    title: "dev: ${{ env.APP_NAME }} → ${{ steps.get_version.outputs.version }}"
-      #    body: "Update dev image: ${{ env.IMAGE }}:${{ steps.get_version.outputs.version }}"
+      - name: Create PR in GitOps repo
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.K8S_GA_PAT }}
+          path: gitops
+          commit-message: "dev: ${{ env.APP_NAME }} → ${{ steps.get_version.outputs.version }}"
+          branch: "newversion-${{ env.APP_NAME }}-${{ steps.get_version.outputs.version }}"
+          base: main
+          title: "dev: ${{ env.APP_NAME }} → ${{ steps.get_version.outputs.version }}"
+          body: "Update dev image: ${{ env.IMAGE }}:${{ steps.get_version.outputs.version }}"
