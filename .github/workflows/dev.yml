@@ -77,14 +77,19 @@ jobs:
           NEW_IMAGE="${{ env.IMAGE }}:${{ steps.get_version.outputs.version }}"
           FILE="dev/services/hello-world-lmv/deployment.yml"
 
+          echo "Whole file BEFORE PERL"
+          cat $FILE
+
           # Replace only the dp-001-app image line (safer than a global 'image:' swap)
           perl -0777 -pe 's|(^\s*image:\s*)\Q${{ env.IMAGE }}\E:[0-9]+\.[0-9]+\.[0-9]+|\1'"$NEW_IMAGE"'|m' -i "$FILE"
+
+          echo "Whole file AFTER PERL"
+          cat $FILE
 
           echo "Replaced image line:"
           grep -n 'image:' "$FILE"
 
-          echo "Whole file"
-          cat $FILE
+
 
       #- name: Create PR in GitOps repo
       #  uses: peter-evans/create-pull-request@v6
