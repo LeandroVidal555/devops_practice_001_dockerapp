@@ -80,8 +80,8 @@ jobs:
           echo "Whole file BEFORE PERL"
           cat $FILE
 
-          # Replace only the dp-001-app image line (safer than a global 'image:' swap)
-          perl -0777 -pe 's|(^\s*image:\s*)\Q${{ env.IMAGE }}\E:[0-9]+\.[0-9]+\.[0-9]+|\1'"$NEW_IMAGE"'|m' -i "$FILE"
+          # Replace only the image line
+          perl -0777 -pe 's|(^\s*image:\s*).*$|\1'"$NEW_IMAGE"'|m' -i "$FILE"
 
           echo "Whole file AFTER PERL"
           cat $FILE
