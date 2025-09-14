@@ -15,7 +15,7 @@ env:
   GITOPS_REPO: "LeandroVidal555/devops_practice_001_kubernetes"
 
 jobs:
-  build-and-push:
+  build-push-update:
     environment: dev
     runs-on: ubuntu-latest
 
@@ -71,7 +71,7 @@ jobs:
           token: ${{ secrets.K8S_GA_PAT }}
           path: gitops
 
-      - name: Update image tag in GitOps repo
+      - name: Update image tag
         working-directory: gitops
         run: |
           NEW_IMAGE="${{ env.IMAGE }}:${{ steps.get_version.outputs.version }}"
@@ -83,9 +83,7 @@ jobs:
           echo "Replaced image line:"
           grep -n 'image:' "$FILE"
 
-
-
-      - name: Create PR in GitOps repo
+      - name: Create PR
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.K8S_GA_PAT }}
