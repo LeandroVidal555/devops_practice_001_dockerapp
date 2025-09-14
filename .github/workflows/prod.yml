@@ -13,9 +13,7 @@ permissions:
 env:
   AWS_REGION: us-east-1
   PROD_AWS_ACCOUNT_ID: ${{ secrets.PROD_AWS_ACCOUNT_ID }}
-  PROD_ECR_REPO: my-app-prod                  # <-- change as needed
-  ECR_REGISTRY: ${{ secrets.PROD_AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
-  IMAGE: ${{ env.ECR_REGISTRY }}/${{ env.PROD_ECR_REPO }}
+  IMAGE: ${{ secrets.ECR_REGISTRY }}/dp-001-app
 
 jobs:
   build-and-push:
