@@ -1,0 +1,61 @@
+name: Dev Build & Push
+
+on:
+  # We'll only push image when the dev pushes a vX.Y.Z tag
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  IMAGE: ${{ secrets.ECR_REGISTRY }}/dev-dp-001-app
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version & enforce rules
+        id: get_version
+        run: |
+          TAG="${GITHUB_REF_NAME}" # e.g. v1.2.3
+
+          # Ensure tag's commit is reachable from dev
+          git fetch origin dev --quiet
+          TAG_SHA="$(git rev-parse "refs/tags/${TAG}^{commit}")"
+
+          if git merge-base --is-ancestor "$TAG_SHA" "origin/dev"; then
+            echo "Tag $TAG is on dev history ✅"
+            echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+          else
+            echo "Tag $TAG is NOT on dev history ❌"
+            exit 1
+          fi
+
+      - name: Configure AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GA_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      #- name: Set up Buildx
+      #  uses: docker/setup-buildx-action@v3
+
+      - name: Build & Push to DEV ECR
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: "${IMAGE}:${{ steps.get_version.outputs.version }}"
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
