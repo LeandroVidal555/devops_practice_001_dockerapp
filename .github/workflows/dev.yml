@@ -75,7 +75,7 @@ jobs:
         working-directory: gitops
         run: |
           NEW_IMAGE="${{ env.IMAGE }}:${{ steps.get_version.outputs.version }}"
-          FILE="dev/services/hello-world-lmv/deployment.yml"
+          FILE="dev/services/${{ env.APP_NAME }}/deployment.yml"
 
           # Replace only the image line
           sed -i "s|image:.*|image:\ ${NEW_IMAGE}|g" $FILE
