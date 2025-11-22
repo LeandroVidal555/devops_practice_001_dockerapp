@@ -1,6 +1,7 @@
 const http = require('http');
 const { URL } = require('url');
 const client = require('prom-client');
+const logger = require('./logger');
 
 const port = process.env.PORT || 3000;
 
@@ -57,6 +58,7 @@ const server = http.createServer(async (req, res) => {
     if (r === 'root') {
       res.statusCode = 200;
       res.end('Prostagma?\n');
+      logger.info({ source: "index root call" }, "Villager said Prostagma");
       httpReqsTotal.inc({ method: req.method, route: r, code: 200 });
       endTimer({ code: 200 });
       return;
@@ -90,5 +92,5 @@ process.on('SIGTERM', () => {
 });
 
 server.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}/`);
+  logger.info({ port }, `Server is running on http://localhost:${port}/`);
 });
