@@ -32,23 +32,6 @@ function stripApiPrefix(pathname) {
   return pathname.startsWith('/api') ? pathname.slice(4) || '/' : pathname;
 }
 
-// --- tiny router ---
-function routeName(pathname) {
-  if (pathname === '/') return 'root';
-  if (pathname === '/healthz') return 'healthz';
-  if (pathname === '/metrics') return 'metrics';
-  return 'not_found';
-}
-
-const server = http.createServer(async (req, res) => {
-  const { pathname: rawPath } = new URL(req.url, `http://${req.headers.host}`);
-  const pathname = stripApiPrefix(rawPath);   // normalize
-  const r = routeName(pathname);
-
-  // rest stays exactly the same…
-
-
-// --- tiny router ---
 function routeName(pathname) {
   if (pathname === '/') return 'root';
   if (pathname === '/healthz') return 'healthz';
